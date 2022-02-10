@@ -1,20 +1,49 @@
 import React,{Component} from 'react';
 import moment from 'moment';
 import {Form,Input,FormGroup,Col, Label,Button} from 'reactstrap';
-import {postProject} from '../../redux/ActionCreaters';
+import {getProjectById,updateProject} from '../../redux/ActionCreaters';
 import {connect} from 'react-redux';
 
-class AddNewProject extends Component{
+const mapStateToProps=(state)=>{
+    return{
+        project:state.project
+    }
+}
+
+
+class UpdateProject extends Component{
     constructor(props){
         super(props);
 
         this.state={
         projectDescription:'',
         projectName:'',
-        projectIdentifier:'',
-        startDate:moment(new Date()).format('YYYY-MM-DD'),
-        endDate:moment(new Date()).format('YYYY-MM-DD') 
+        start_date:'',
+        end_date:''
       }
+    }
+
+    componentDidMount(){
+        this.props.getProjectById(this.props.match.params.projectIdentifier);
+
+    }
+    componentWillReceiveProps(nextProps){
+        const {
+            projectDescription,
+            projectName,
+            start_date,
+            end_date ,
+
+        }=nextProps.project.project;
+        
+      
+        this.setState({
+            projectDescription,
+            projectName,
+            start_date,
+            end_date 
+        })
+   
     }
    
 
@@ -32,20 +61,20 @@ class AddNewProject extends Component{
         let newProject={
             projectName:this.state.projectName,
             projectDescription:this.state.projectDescription,
-            projectIdentifier:this.state.projectIdentifier,
+            projectIdentifier:this.props.match.params.projectIdentifier,
             start_date:this.state.startDate,
             end_date:this.state.endDate
         }
-     //  console.log(newProject);
+      console.log(newProject+"inside update");
 
-     this.props.postProject(newProject,this.props.history);
+     this.props.updateProject(newProject,this.props.history);
   //   this.props.history.push("/home")
     }
 
     render(){
         return(
             <div className='container'>
-                <h2 className='project-name'>ADD NEW PROJECT</h2>
+                <h2 className='project-name'>UPDATE PROJECT</h2>
                 <br/>
                 <br/>
                 <div className='col-12 col-md-10'>
@@ -64,9 +93,8 @@ class AddNewProject extends Component{
                             <Label md={2} htmlFor="projectIdentifier">
                                 <b>Identifier:</b></Label>
                             <Col md={8}>
-                                <Input type="text" name="projectIdentifier" id="projectIdentifier" 
-                                value={this.state.projectIdentifier}
-                                onChange={this.handleChange}/>
+                                
+                              <Label>{this.props.match.params.projectIdentifier}</Label>
 
                             </Col>
                         </FormGroup>
@@ -88,7 +116,7 @@ class AddNewProject extends Component{
                                 <b>Start Date</b></Label>
                             <Col md={8}>
                                 <Input type="date" name="startDate" id="startDate" 
-                                value={this.state.startDate}
+                                value={this.state.start_date}
                                 onChange={this.handleChange} />
 
                             </Col>
@@ -98,7 +126,7 @@ class AddNewProject extends Component{
                                 <b>End Date</b></Label>
                             <Col md={8}>
                                 <Input type="date" name="endDate" id="endDate" 
-                                value={this.state.endDate}
+                                value={this.state.end_date}
                                 onChange={this.handleChange} />
 
                             </Col>
@@ -121,4 +149,4 @@ class AddNewProject extends Component{
     }
 }
 
-export default connect(null,{postProject})(AddNewProject);
+export default connect(mapStateToProps,{ getProjectById,updateProject})(UpdateProject);
