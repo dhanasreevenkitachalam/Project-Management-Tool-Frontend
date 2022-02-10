@@ -22,7 +22,10 @@ export const Project=(state={
             console.log(action.payload+"inside redu")
             return {...state,projects:[],errMessage:null,isLoading:false,project:action.payload}
         }
+         case ActionTypes.DELETE_PROJECT:{
 
+            return{...state,projects:state.projects.filter((project)=>project.projectIdentifier=action.payload),errMessage:null,isLoading:false,project:{}}
+         }
         default: return state;
     }
 

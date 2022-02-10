@@ -1,9 +1,15 @@
 import React,{Component} from 'react';
-import {Link} from 'react-router-dom'
+import {Link,} from 'react-router-dom'
+import { deleteProject } from '../../redux/ActionCreaters';
+import {connect} from 'react-redux'
 
 
 class ProjectItem extends Component{
 
+
+    handleDelete=()=>{
+            this.props.deleteProject(this.props.project.projectIdentifier)
+    }
 
     render(){
 
@@ -35,7 +41,7 @@ class ProjectItem extends Component{
                                 </li>
                             </Link>
                             <a href="">
-                                <li className="list-group-item delete">
+                                <li className="list-group-item delete" onClick={this.handleDelete}>
                                     <i className="fa fa-minus-circle pr-1">Delete Project</i>
                                 </li>
                             </a>
@@ -54,4 +60,4 @@ class ProjectItem extends Component{
 
 }
 
-export default ProjectItem;
+export default connect(null,{deleteProject})(ProjectItem);

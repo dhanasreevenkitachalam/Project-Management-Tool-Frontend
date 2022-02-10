@@ -155,3 +155,41 @@ export const addOneProject=(project)=>({
     payload:project
 
 })
+
+
+export const deleteProject=(id)=>dispatch=>{
+    return fetch(`http://localhost:8080/api/project/${id}`, {
+        method: 'DELETE',
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log(response)
+            return response;
+        }
+        else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    },
+    error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+    })
+  
+    .then(id =>{
+        dispatch(deleteOneProject(id))
+     //   history.push("/home")
+        
+    }
+    )
+    .catch(error => { 
+        dispatch(projectError(error.message))
+         })
+}
+
+export const deleteOneProject=(id)=>({
+    type:ActionTypes.DELETE_PROJECT,
+    payload:id
+})
